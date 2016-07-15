@@ -10,6 +10,7 @@ set(LIBS pthread)
 find_package(PkgConfig)
 PKG_CHECK_MODULES(MHD libmicrohttpd REQUIRED)
 include_directories(${MHD_INCLUDE_DIRS})
+link_directories(${MHD_LIBRARY_DIRS})
 set(LIBS ${LIBS} ${MHD_LIBRARIES})
 
 
