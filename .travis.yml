@@ -5,10 +5,10 @@ before_script:
   - bash ./build_libmicrohttpd.sh --compile
 
 script:
- - mkdir build ; cd build ; cmake ../ ; make
+  - mkdir build ; cd build ; cmake ../ ; make
 
 env:
-  - CMAKE_C_FLAGS="-I/tmp/libmicrohttpd_install/include" CMAKE_LD_FLAGS="-L/tmp/libmicrohttpd_install/lib"
+  - PKG_CONFIG_PATH="/tmp/libmicrohttpd_install/lib/pkgconfig/"
 
 addons:
   apt:
