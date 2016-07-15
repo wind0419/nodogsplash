@@ -5,7 +5,7 @@ before_script:
   - bash ./build_libmicrohttpd.sh --compile
 
 script:
- - make
+ - mkdir build ; cd build ; cmake ../ ; make
 
 env:
   - CFLAGS="-I/tmp/libmicrohttpd_install/include" LDFLAGS="-L/tmp/libmicrohttpd_install/lib"
