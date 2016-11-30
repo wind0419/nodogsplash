@@ -261,6 +261,7 @@ libmicrohttpd_cb(void *cls,
 		if(client->fw_connection_state == FW_MARK_AUTHENTICATED ||
 				client->fw_connection_state == FW_MARK_TRUSTED) {
 			/* client already authed - dangerous!!! This should never happen */
+			debug(LOG_DEBUG, "Client %s: already authed.", client->mac);
 			ret = authenticated(connection, ip_addr, mac, url, client);
 			free(mac);
 			free(ip_addr);
@@ -431,35 +432,40 @@ static int preauthenticated(struct MHD_Connection *connection,
 			return send_error(connection, 503);
 	}
 
+	debug(LOG_DEBUG, "Client %s: preauthenticated.", client->mac);
 	MHD_get_connection_values(connection, MHD_HEADER_KIND, get_host_value_callback, &host);
 
-	/* check if this is a redirect querty with a foreign host as target */
+	/* check if this is a redirect query with a foreign host as target */
 	if(is_foreign_hosts(connection, host)) {
+		debug(LOG_DEBUG, "Client %s: requested a foreign website. Redirecting to us.", client->mac);
 		return redirect_to_splashpage(connection, client, host, url);
 	}
 
 	/* request is directed to us */
 	/* check if client wants to be authenticated */
 	if(check_authdir_match(url, config->authdir)) {
-
 		/* Only the first request will redirected to config->redirectURL.
 		 * When the client reloads a page when it's authenticated, it should be redirected
 		 * to their origin url
 		 */
+		debug(LOG_DEBUG, "Client %s: Use authdir.", client->mac);
 		if (config->redirectURL)
 			redirect_url = config->redirectURL;
 		else
 			redirect_url = get_redirect_url(connection);
 
 		if (try_to_authenticate(connection, client, host, url)) {
+			debug(LOG_DEBUG, "Client %s: Auth success.", client->mac);
 			return authenticate_client(connection, ip_addr, mac, redirect_url, client);
 		} else {
+			debug(LOG_DEBUG, "Client %s: Auth failed.", client->mac);
 			/* user used an invalid token, redirect to splashpage but hold query "redir" intact */
 			return encode_and_redirect_to_splashpage(connection, redirect_url);
 		}
 	}
 
 	if(is_splashpage(host, url)) {
+		debug(LOG_DEBUG, "Client %s: Requested splashpage.", client->mac);
 		return show_splashpage(connection, client);
 	}
 
