@@ -1,6 +1,6 @@
-### Install from OpenWrt feeds
+### Install from LEDE feeds
 
-The NoDogSplash OpenWrt package is part of the [openwrt-routing](https://github.com/openwrt-routing/packages) feed and can be installed using opkg:
+The NoDogSplash LEDE package is part of the [openwrt-routing](https://github.com/openwrt-routing/packages) feed and can be installed using opkg:
 
 ```
 opkg update
@@ -20,15 +20,15 @@ sudo apt-get install git subversion g++ libncurses5-dev gawk zlib1g-dev build-es
 
 Build Commands:
 ```
-git clone git://git.openwrt.org/openwrt.git
-cd openwrt
+git clone -b lede-17.01 git://git.lede-project.org/source.git
+cd source
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 ./scripts/feeds uninstall nodogsplash
 
 git clone git://github.com/nodogsplash/nodogsplash.git
-cp -rf nodogsplash/openwrt/nodogsplash package/
+cp -rf nodogsplash/lede/nodogsplash package/
 rm -rf nodogsplash/
 
 make defconfig
@@ -49,7 +49,7 @@ The images and all *.ipk packages are now inside the bin/ folder.
 You can install the NoDogSplash .ipk using "opkg install &lt;ipkg-file&gt;"
 on the router or just use the whole image.
 
-For details please check the OpenWRT documentation.
+For details please check the LEDE documentation.
 
 ## Build from local sources
 
@@ -74,7 +74,7 @@ make package/nodogsplash/{clean,compile} V=s
 Also make sure to enable
 
 ```
-"Advanced configuration options" => "Enable package source tree override"
+"Advanced configuration options (for developers)" => "Enable package source tree override"
 ```
 
 in the menu when you do `make menuconfig`.
